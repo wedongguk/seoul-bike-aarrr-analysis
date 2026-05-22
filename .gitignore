@@ -1,5 +1,12 @@
 # data
 data/raw/
+data/processed/
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+*.db
+*.sqlite
+*.sqlite3
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
