@@ -64,56 +64,63 @@ ORDER BY sub_rides_per_signup DESC;
 
 -- 3. 세그먼트 유형 분류
 WITH segment AS (
-    SELECT
-        gender,
-        age_band,
-        SUM(signup_cnt) AS signup_cnt,
-        SUM(sub_ride_cnt) AS sub_ride_cnt,
-        SUM(total_ride_cnt) AS total_ride_cnt,
-        CASE WHEN SUM(signup_cnt) > 0 THEN 1.0 * SUM(sub_ride_cnt) / SUM(signup_cnt) ELSE NULL END AS sub_rides_per_signup,
-        CASE WHEN SUM(total_ride_cnt) > 0 THEN 1.0 * SUM(sub_ride_cnt) / SUM(total_ride_cnt) ELSE NULL END AS same_month_subscription_share
+    SELECT gender, age_band,
+           SUM(signup_cnt) AS signup_cnt,
+           SUM(sub_ride_cnt) AS sub_ride_cnt,
+           SUM(total_ride_cnt) AS total_ride_cnt,
+           CASE WHEN SUM(signup_cnt) > 0 THEN 1.0 * SUM(sub_ride_cnt) / SUM(signup_cnt) ELSE NULL END AS activation_proxy,
+           CASE WHEN SUM(total_ride_cnt) > 0 THEN 1.0 * SUM(sub_ride_cnt) / SUM(total_ride_cnt) ELSE NULL END AS same_segment_subscription_share
     FROM mart_growth_month
     WHERE age_band <> '기타'
       AND LOWER(TRIM(COALESCE(gender, ''))) <> 'unknown'
       AND LOWER(TRIM(COALESCE(age_band, ''))) <> 'unknown'
     GROUP BY gender, age_band
 ),
-ranked AS (
-    SELECT
-        *,
-        NTILE(4) OVER (ORDER BY signup_cnt) AS signup_quartile,
-        NTILE(4) OVER (ORDER BY sub_rides_per_signup) AS activation_quartile,
-        NTILE(4) OVER (ORDER BY same_month_subscription_share) AS subscription_share_quartile
+total AS (
+    SELECT SUM(signup_cnt) AS total_signup_cnt,
+           SUM(sub_ride_cnt) AS total_sub_ride_cnt
     FROM segment
-    WHERE sub_rides_per_signup IS NOT NULL
+),
+base AS (
+    SELECT s.*,
+           1.0 * s.signup_cnt / t.total_signup_cnt AS signup_share,
+           1.0 * s.sub_ride_cnt / t.total_sub_ride_cnt AS sub_ride_share,
+           1.0 * s.sub_ride_cnt / t.total_sub_ride_cnt - 1.0 * s.signup_cnt / t.total_signup_cnt AS sub_vs_signup_share_gap
+    FROM segment s
+    CROSS JOIN total t
+),
+ranked AS (
+    SELECT *,
+           NTILE(3) OVER (ORDER BY signup_cnt) AS signup_tertile,
+           NTILE(3) OVER (ORDER BY activation_proxy) AS activation_tertile
+    FROM base
 )
-SELECT
-    gender,
-    age_band,
-    signup_cnt,
-    sub_ride_cnt,
-    total_ride_cnt,
-    ROUND(sub_rides_per_signup, 4) AS sub_rides_per_signup,
-    ROUND(same_month_subscription_share, 4) AS same_month_subscription_share,
-    signup_quartile,
-    activation_quartile,
-    subscription_share_quartile,
-    CASE
-        WHEN signup_quartile = 4 AND activation_quartile = 4 AND subscription_share_quartile = 4 THEN '가입 규모 큼 + 정기권 이용 강함'
-        WHEN signup_quartile = 4 AND activation_quartile <= 2 THEN '가입은 많지만 정기권 이용 약함'
-        WHEN signup_quartile <= 2 AND activation_quartile = 4 THEN '가입 규모는 작지만 이용 강도 높음'
-        WHEN activation_quartile = 4 AND subscription_share_quartile = 4 THEN '정기권 중심 이용 강함'
-        ELSE '일반'
-    END AS activation_segment_type
+SELECT gender, age_band, signup_cnt, sub_ride_cnt, total_ride_cnt,
+       ROUND(activation_proxy, 4) AS activation_proxy,
+       ROUND(same_segment_subscription_share, 4) AS same_segment_subscription_share,
+       ROUND(signup_share, 4) AS signup_share,
+       ROUND(sub_ride_share, 4) AS sub_ride_share,
+       ROUND(sub_vs_signup_share_gap, 4) AS sub_vs_signup_share_gap,
+       signup_tertile, activation_tertile,
+       CASE
+            WHEN signup_tertile = 3 AND activation_tertile = 3 AND sub_vs_signup_share_gap > 0 THEN '가입 규모 큼 + 정기권 이용 강함'
+            WHEN signup_tertile = 3 AND (activation_tertile <= 2 OR sub_vs_signup_share_gap < 0) THEN '가입은 많지만 정기권 이용 약함'
+            WHEN signup_tertile <= 2 AND activation_tertile = 3 THEN '가입 규모는 작지만 이용 강도 높음'
+            WHEN signup_tertile = 1 AND activation_tertile = 1 THEN '가입 규모 작음 + 이용 강도 낮음'
+            WHEN same_segment_subscription_share >= 0.9 THEN '정기권 중심 이용 성향 강함'
+            ELSE '일반'
+       END AS activation_segment_type
 FROM ranked
 ORDER BY
     CASE
-        WHEN signup_quartile = 4 AND activation_quartile = 4 AND subscription_share_quartile = 4 THEN 1
-        WHEN signup_quartile = 4 AND activation_quartile <= 2 THEN 2
-        WHEN signup_quartile <= 2 AND activation_quartile = 4 THEN 3
-        ELSE 4
+        WHEN signup_tertile = 3 AND activation_tertile = 3 AND sub_vs_signup_share_gap > 0 THEN 1
+        WHEN signup_tertile = 3 AND (activation_tertile <= 2 OR sub_vs_signup_share_gap < 0) THEN 2
+        WHEN signup_tertile <= 2 AND activation_tertile = 3 THEN 3
+        WHEN signup_tertile = 1 AND activation_tertile = 1 THEN 4
+        WHEN same_segment_subscription_share >= 0.9 THEN 5
+        ELSE 6
     END,
-    signup_cnt DESC;
+    activation_proxy DESC;
 
 -- 4. 월별 가입은 많지만 정기권 이용이 약한 구간
 WITH ranked AS (
