@@ -83,16 +83,17 @@
 
 ```text
 RAW DATA
-  ├─ signup_month
-  ├─ ride_month
-  ├─ station_usage_month
-  └─ station_snapshot
+  ├─ raw_signup_month
+  ├─ raw_ride_month
+  ├─ raw_station_usage_month
+  └─ raw_station_snapshot
         ↓
 STAGING TABLE
-  ├─ 월별 신규가입 집계
-  ├─ 월별 이용권 유형 집계
-  ├─ 대여소 좌표 및 거치대 정보 정리
-  └─ 대여소 월별 이용 집계
+  ├─ stg_signup_month
+  ├─ stg_ride_month
+  ├─ stg_station_usage_month
+  ├─ stg_station_snapshot
+  └─ stg_month_station_snapshot_map
         ↓
 MART TABLE
   ├─ mart_growth_month
@@ -357,7 +358,22 @@ Retention은 개인 단위 이탈률이 아니라 월별 정기권 이용 흐름
 
 ---
 
-## 12. 기술 스택
+## 12. 티스토리 링크
+- [분석 단위 및 질문 고정](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D1-%EB%B6%84%EC%84%9D-%EB%8B%A8%EC%9C%84-%EB%B0%8F-%EC%A7%88%EB%AC%B8-%EA%B3%A0%EC%A0%95)
+- [데이터셋 확보](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D2-%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%85%8B-%ED%99%95%EB%B3%B4)
+- [raw 적재와 기본 스키마 설계](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D3-raw-%EC%A0%81%EC%9E%AC%EC%99%80-%EA%B8%B0%EB%B3%B8-%EC%8A%A4%ED%82%A4%EB%A7%88-%EC%84%A4%EA%B3%84)
+- [전처리와 품질 점검](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D4-%EC%A0%84%EC%B2%98%EB%A6%AC%EC%99%80-%ED%92%88%EC%A7%88-%EC%A0%90)
+- [분석용 mart 만들기](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D5-%EB%B6%84%EC%84%9D%EC%9A%A9-mart-%EB%A7%8C%EB%93%A4%EA%B8%B0)
+- [수정 사항](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D6-%EC%88%98%EC%A0%95-%EC%82%AC%ED%95%AD)
+- [Acquisition 분석](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D7-%ED%95%B5%EC%8B%AC-%EB%B6%84%EC%84%9D-%EC%88%98%ED%96%89-%EB%B0%8F-%EC%8B%9C%EA%B0%81%ED%99%941-Acquisition)
+- [Activation 분석](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D7-%ED%95%B5%EC%8B%AC-%EB%B6%84%EC%84%9D-%EC%88%98%ED%96%89-%EB%B0%8F-%EC%8B%9C%EA%B0%81%ED%99%942-Activation)
+- [Retention 분석](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D7-%ED%95%B5%EC%8B%AC-%EB%B6%84%EC%84%9D-%EC%88%98%ED%96%89-%EB%B0%8F-%EC%8B%9C%EA%B0%81%ED%99%943-Retention)
+- [운영 효율 분석](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D7-%ED%95%B5%EC%8B%AC-%EB%B6%84%EC%84%9D-%EC%88%98%ED%96%89-%EB%B0%8F-%EC%8B%9C%EA%B0%81%ED%99%944-%EC%9A%B4%EC%98%81-%ED%9A%A8%EC%9C%A8-%EB%B6%84%EC%84%9D)
+- [핵심 인사이트 및 액션 아이템 초안](https://weird0253.tistory.com/entry/%EB%94%B0%EB%A6%89%EC%9D%B4-%EA%B5%AC%EB%8F%85-%EC%A0%84%ED%99%98-%EB%B0%8F-%EB%A6%AC%ED%85%90%EC%85%98-%EB%B6%84%EC%84%9D8-%ED%95%B5%EC%8B%AC-%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%B0%8F-%EC%95%A1%EC%85%98-%EC%95%84%EC%9D%B4%ED%85%9C-%EC%B4%88%EC%95%88)
+
+---
+
+## 13. 기술 스택
 
 | 구분 | 사용 도구 |
 |---|---|
