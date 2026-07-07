@@ -179,11 +179,11 @@ Acquisition 분석에서는 월별 신규가입 추이와 성별·연령대별 �
 
 <p align="center">
   <img src="images/acquisition/acquisition_02_monthly_signup_trend_compare.png" width="49%" alt="월별 신규가입 추이 비교">
-  <img src="images/acquisition/acquisition_01_top_signup_segments_exclude_other.png" width="49%" alt="신규가입 상위 성별·연령대 세그먼트">
+  <img src="images/acquisition/acquisition_05_seasonality_compare.png" width="70%" alt="계절별 신규가입 비교">
 </p>
 
 <p align="center">
-  <img src="images/acquisition/acquisition_05_seasonality_compare.png" width="70%" alt="계절별 신규가입 비교">
+  <img src="images/acquisition/acquisition_01_top_signup_segments_exclude_other.png" width="49%" alt="신규가입 상위 성별·연령대 세그먼트">
 </p>
 
 신규가입은 3\~5월 봄철에 크게 증가하고, 11\~12월 및 겨울철에는 감소하는 계절성을 보였다. 성별·연령대 기준으로는 **20대 남성과 20대 여성**이 전체 신규가입의 핵심 유입층으로 나타났다.
@@ -224,8 +224,11 @@ Retention 분석에서는 정기권 이용이 월별로 지속되는 흐름을 �
 </p>
 
 <p align="center">
+  <img src="images/retention/retention_03_monthly_sub_ride_vs_prev3m_avg.png" width="49%" alt="전월 대비 vs 3개월 평균 대비 비교">
+</p>
+
+<p align="center">
   <img src="images/retention/retention_06_segment_volume_vs_retention_strength.png" width="49%" alt="세그먼트별 정기권 이용 규모와 Retention 강도">
-  <img src="images/retention/retention_09_segments_repeatedly_showing_real_weak_retention.png" width="49%" alt="반복적으로 약한 Retention을 보인 세그먼트">
 </p>
 
 정기권 이용은 3\~6월에 전월 대비 증가하며 봄철 회복 흐름을 보였다. 반면 11\~2월에는 정기권 이용 유지가 약화되는 경향이 나타났다.
@@ -242,12 +245,10 @@ Retention은 개인 단위 이탈률이 아니라 월별 정기권 이용 흐름
 
 <p align="center">
   <img src="images/station_operation_efficiency/01_top_stations_by_total_rides.png" width="49%" alt="총 이용건수 기준 상위 대여소">
-  <img src="images/station_operation_efficiency/02_top_stations_by_rides_per_rack.png" width="49%" alt="거치대 대비 이용효율 기준 상위 대여소">
 </p>
 
 <p align="center">
-  <img src="images/station_operation_efficiency/04_rack_count_vs_avg_monthly_rides.png" width="49%" alt="거치대 수와 월평균 이용건수 관계">
-  <img src="images/station_operation_efficiency/05_demand_volume_vs_rack_efficiency.png" width="49%" alt="이용 수요 규모와 거치대 대비 이용효율 관계">
+  <img src="images/station_operation_efficiency/02_top_stations_by_rides_per_rack.png" width="49%" alt="거치대 대비 이용효율 기준 상위 대여소">
 </p>
 
 총 이용건수는 지하철역, 업무·상업지구, 한강공원 접근 지점, 대형 생활 거점에 집중되었다. 
@@ -269,22 +270,6 @@ Retention은 개인 단위 이탈률이 아니라 월별 정기권 이용 흐름
 | 핵심 저활용 후보 | 218개 |
 | 24개월 내내 과수요 조건 만족 | 86개 |
 | 24개월 내내 저활용 조건 만족 | 78개 |
-
-<p align="center">
-  <img src="images/station_operation_efficiency/08_operation_station_type_10tile_count.png" width="49%" alt="10분위 기준 운영 유형별 대여소 수">
-  <img src="images/station_operation_efficiency/06_repeated_over_demand_station_candidates.png" width="49%" alt="반복 과수요 후보 대여소">
-</p>
-
-<p align="center">
-  <img src="images/station_operation_efficiency/07_repeated_under_used_station_candidates.png" width="70%" alt="반복 저활용 후보 대여소">
-</p>
-
-대여소 위치 기반 결과는 HTML 지도로도 저장하였다.
-
-- [총 이용건수 상위 대여소 지도](images/station_operation_efficiency/01_top30_station_by_total_rides_map.html)
-- [거치대 대비 이용효율 상위 대여소 지도](images/station_operation_efficiency/02_top30_station_by_avg_monthly_rides_per_rack_map.html)
-- [10분위 기준 24개월 반복 과수요 대여소 지도](images/station_operation_efficiency/09_10tile_repeated_over_demand_map.html)
-- [10분위 기준 24개월 반복 저활용 대여소 지도](images/station_operation_efficiency/09_10tile_repeated_under_use_map.html)
 
 이 결과는 따릉이 운영에서 과수요와 저활용이 동시에 존재하며, 일부 대여소에서는 수요-공급 불균형이 장기간 반복되고 있음을 보여준다.과수요 후보는 단순 이용량이 많은 대여소뿐 아니라, 거치대 수 대비 이용 압력이 큰 대여소까지 함께 고려해야 한다.
 
